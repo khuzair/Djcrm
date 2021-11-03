@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import fields
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.utils.regex_helper import Choice
-from .models import Lead, Agent
+from .models import Lead, Agent, Category
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -51,4 +51,11 @@ class LeadUpdateCategoryForm(forms.ModelForm):
         model = Lead
         fields = (
             'category',
+        )
+
+class CategoryModelForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
         )

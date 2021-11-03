@@ -5,7 +5,7 @@ import random
 from leads.models import Agent
 from .forms import AgentModelForm
 from .mixins import OrganizerLoginRequired
-
+from django.core.mail import send_mail
 
 class AgentListView(OrganizerLoginRequired, generic.ListView):
     template_name = "agents/agent_list.html"
@@ -21,7 +21,7 @@ class AgentCreateView(OrganizerLoginRequired, generic.CreateView):
 
     def get_success_url(self):
         return reverse("agents:agent-list")
-
+        
     def form_valid(self, form):
         user = form.save(commit=False)
         user.is_agent = True
@@ -31,6 +31,12 @@ class AgentCreateView(OrganizerLoginRequired, generic.CreateView):
         Agent.objects.create(
             user=user,
             organization=self.request.user.userprofile
+        )
+        send_mail(
+        subject="Create Agent Password",
+        message="Go to site to view",
+        from_email="samik3306@gmail.com",
+        recipient_list=[user.email]
         )
         return super(AgentCreateView, self).form_valid(form)
 

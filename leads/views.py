@@ -1,3 +1,4 @@
+from django.db.models.query_utils import select_related_descend
 from django.forms import Form
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, request
@@ -6,7 +7,7 @@ from django.views.generic.edit import FormView
 from .models import Lead, Category
 from agents.mixins import OrganizerLoginRequired
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import LeadForm, LeadModelForm, AssignAgentForm, LeadUpdateCategoryForm
+from .forms import LeadForm, LeadModelForm, AssignAgentForm, LeadUpdateCategoryForm, CategoryModelForm
 from django.core.mail import send_mail
 from .forms import CustomeUserCreationForm
 
@@ -88,6 +89,11 @@ class LeadCreateView(OrganizerLoginRequired, CreateView):
     # from_email="samik3306@gmail.com",
     # recipient_list=["affan4211@gmail.com"]
     # )
+    def form_valid(self, form):
+        lead = form.save(commit=False)
+        lead.organizatios = self.request.user.userprofile
+        lead.save()
+        return super(CategoryCreateView, self).form_valid(form)
     def get_success_url(self):
         return reverse("leads:lead-list")   
 
@@ -225,6 +231,40 @@ class LeadCategoryUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse("leads:lead-detail", kwargs={"pk": self.get_object().id})
 
+
+class CategoryCreateView(OrganizerLoginRequired, CreateView):
+    template_name = "leads/create_category.html"
+    form_class = CategoryModelForm
+
+    def get_success_url(self):
+        return reverse("leads:category-list")   
+
+    def form_valid(self, form):
+        category = form.save(commit=False)
+        category.organizations = self.request.user.userprofile
+        category.save()
+        return super(CategoryCreateView, self).form_valid(form)
+
+
+class CategoryUpdateView(OrganizerLoginRequired, UpdateView):
+    template_name = "leads/category_update.html"
+    form_class = CategoryModelForm
+    def get_queryset(self):
+        user = self.request.user
+        return Category.objects.filter(organizations=user.userprofile)
+
+    def get_success_url(self):
+        return reverse("leads:category-list")
+
+
+class CategoryDeleteView(OrganizerLoginRequired, DeleteView):
+    template_name = "leads/category_delete.html"
+    def get_queryset(self):
+        organizations = self.request.user.userprofile
+        return Category.objects.filter(organizations=organizations)
+    
+    def get_success_url(self):
+        return reverse("leads:category-list")
 
 def lead_update(request, pk):
     lead = Lead.objects.get(id=pk)

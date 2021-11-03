@@ -5,7 +5,9 @@
     <div class="container px-5 py-24 mx-auto">
       <div class="flex flex-col text-center w-full mb-20">
         <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">Categories</h1>
-        <p class="lg:w-2/3 mx-auto leading-relaxed text-base">This segment lead us to catgory</p>
+        {% if user.is_organizer %}
+        <a href="{% url 'leads:create-category'%}" class="hover:text-blue-600 lg:w-2/3 mx-auto leading-relaxed text-base">Create Category</a>
+        {% endif %}
       </div>
       <div class="lg:w-2/3 w-full mx-auto overflow-auto">
         <table class="table-auto w-full text-left whitespace-no-wrap">
@@ -24,7 +26,7 @@
            {% for category in category_list %}
            <tr>
             <td><a href="{% url 'leads:category-detail' category.pk %}" class="hover:text-blue-500 px-4 py-3">{{category.name}}</a></td>
-            <td class="px-4 py-3">TODO count</td>
+            <td><a href="{% url 'leads:category-update' category.pk %}">Update Category</a></td>
           </tr>
            {% endfor %}
           </tbody>
