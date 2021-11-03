@@ -41,8 +41,10 @@ class LeadListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(LeadListView, self).get_context_data(**kwargs)
+        # fetching all users from that organization
         user = self.request.user
         if user.is_organizer:
+            # filtering users which have no agent
             queryset = Lead.objects.filter(organization=user.userprofile,
             agent__isnull=True)
             context.update({
