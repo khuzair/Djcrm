@@ -1,10 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.views import (
-    LoginView,
-    LogoutView,
-    PasswordResetView,
-    PasswordResetDoneView,
-    PasswordResetConfirmView,
+    LoginView, LogoutView, PasswordResetView,
+    PasswordResetDoneView, PasswordResetConfirmView,
     PasswordResetCompleteView
 )
 from django.conf import settings
@@ -19,16 +16,19 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('leads/', include('leads.urls', namespace="leads")),
     path('agents/', include('agents.urls', namespace="agents")),
-    path('',LandingViewPage.as_view(), name="landing-page"),
+    path('', LandingViewPage.as_view(), name="landing-page"),
     path('signup/', SignupView.as_view(), name="signup"),
     path('reset_password/',
-    PasswordResetView.as_view(template_name="registration/password_reset.html"), name="reset_password"),
+         PasswordResetView.as_view(template_name="registration/password_reset.html"), name="reset_password"),
     path('reset_password_sent/',
-    PasswordResetDoneView.as_view(template_name="registration/password_reset_sent.html"), name="password_reset_done"),
+         PasswordResetDoneView.as_view(template_name="registration/password_reset_sent.html"),
+         name="password_reset_done"),
     path('reset/<uidb64>/<token>/',
-    PasswordResetConfirmView.as_view(template_name="registration/password_reset_confirm.html"), name="password_reset_confirm"),
+         PasswordResetConfirmView.as_view(template_name="registration/password_reset_confirm.html"),
+         name="password_reset_confirm"),
     path('reset_password_complete/',
-    PasswordResetCompleteView.as_view(template_name="registration/password_reset_complete.html"), name="password_reset_complete"),
+         PasswordResetCompleteView.as_view(template_name="registration/password_reset_complete.html"),
+         name="password_reset_complete"),
 ]
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT )
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -16,7 +16,6 @@ class LeadModelForm(forms.ModelForm):
             'first_name',
             'last_name',
             'age',
-            'organization',
             'agent',
             'description',
             'phone_no',
@@ -29,20 +28,24 @@ class LeadForm(forms.Form):
     last_name = forms.CharField()
     age = forms.IntegerField(min_value=0)
 
-class CustomeUserCreationForm(UserCreationForm):
+
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["username", "email", "password1", "password2"]
 
 
 class AssignAgentForm(forms.Form):
+    # modelchoicefield takes queryset
     agent = forms.ModelChoiceField(queryset=Agent.objects.none())
 
     def __init__(self, *args, **kwargs):
-        #Display agent on a form page dynamically
         request = kwargs.pop('request')
+        # grab the agents for the logged in user organization
         agents = Agent.objects.filter(organization=request.user.userprofile)
+        # everytime the form rendered we updating the form field
         super(AssignAgentForm, self).__init__(*args, **kwargs)
+        # Display agent on a form field dynamically
         self.fields["agent"].queryset = agents
 
 
@@ -52,6 +55,7 @@ class LeadUpdateCategoryForm(forms.ModelForm):
         fields = (
             'category',
         )
+
 
 class CategoryModelForm(forms.ModelForm):
     class Meta:
