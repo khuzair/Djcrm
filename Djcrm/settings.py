@@ -6,13 +6,12 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=False)
+READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=True)
 
 if READ_DOT_ENV_FILE:
     # reading .env file
     environ.Env.read_env()
 
-print(READ_DOT_ENV_FILE)
 
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')

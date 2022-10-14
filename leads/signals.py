@@ -5,7 +5,7 @@ from leads.models import UserProfile
 
 def post_user_created_signal(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)  # userprofile will be created iff new user will will create
+        UserProfile.objects.create(user=instance)  # userprofile will be created iff new user will be created
         print(instance)
 
 
